@@ -1,0 +1,31 @@
+.min-width-80{
+    min-width: 80%!important;
+}
+
+.button-box {
+    margin: 2% auto !important;
+    width: 60%!important;
+    display: flex!important;
+    justify-content: space-around!important;
+}
+
+.rating {
+    display: flex;
+    justify-content: center;
+}
+
+.back {
+    display: flex;
+    color: #c85a54!important;
+}
+
+.star {
+    margin: auto 0;
+}
+
+.link-container {
+    text-align: left;
+    padding-left: 0!important;
+    width: fit-content!important;
+    margin-left: 0!important;
+}

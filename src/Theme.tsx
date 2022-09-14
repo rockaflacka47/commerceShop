@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from "@mui/material";
-import { red, blueGrey } from "@mui/material/colors";
+import { red, blueGrey, grey } from "@mui/material/colors";
 
 const appTheme = createTheme({
     palette: {
@@ -18,6 +18,13 @@ const appTheme = createTheme({
         error: {
             main: red.A400
         },
+        text: {
+            primary: grey[900],
+            secondary: "#c85a54",
+        },
+        warning: {
+            main: "#c85a54"
+        }
     },
 });
 
