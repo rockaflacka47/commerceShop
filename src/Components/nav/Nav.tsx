@@ -244,7 +244,7 @@ export default function Nav() {
               component="div"
               sx={{ display: { xs: "none", sm: "block" }, color: "#ffffff" }}
             >
-              Rocker Webshop CI/CD
+              Rocker Webshop
             </Typography>
           </Link>
           <Search sx={{ width: "100%" }}>
