@@ -364,7 +364,8 @@ export function Cart() {
                         {item.Name}
                       </Typography>
                       <Typography component="h2" className="rating">
-                        {ratings[index] && ratings[index] != "NaN"
+                        {//@ts-ignore 
+                        ratings[index] && ratings[index] != "NaN"
                           ? ratings[index] + "/5"
                           : "No ratings yet"}
                         <StarsIcon
@@ -406,9 +407,11 @@ export function Cart() {
                 <Grid xs={12} md={4} margin="auto">
                   <Typography>In Cart: {counts.get(item._id)}</Typography>
                   <Typography>Cost: {currencyFormat(item.Price)}</Typography>
+                  
                   <Typography>
-                    Total Cost:{" "}
-                    {currencyFormat(counts.get(item._id) * item.Price)}
+                    Total Cost:{" "}   
+                    {//@ts-ignore 
+                    currencyFormat(counts.get(item._id) * item.Price)}
                   </Typography>
 
                   <Container

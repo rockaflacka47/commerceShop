@@ -31,6 +31,7 @@ export default function CheckoutContainer(props: Props) {
   };
 
   return (
+    //@ts-ignore
     <Elements stripe={stripePromise} options={options}>
       {props.secret && (
         <Paper
