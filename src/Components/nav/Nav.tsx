@@ -189,7 +189,7 @@ export default function Nav() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
+      <Link to="/cart">
         <IconButton size="large" aria-label="show card" color="inherit">
           <Badge
             badgeContent={user.Cart ? user.Cart.length : 0}
@@ -199,7 +199,7 @@ export default function Nav() {
           </Badge>
         </IconButton>
         <p>Shopping Cart</p>
-      </MenuItem>
+      </Link>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"
@@ -242,7 +242,7 @@ export default function Nav() {
               variant="h6"
               noWrap
               component="div"
-              sx={{ display: { xs: "none", sm: "block" }, color: "#ffffff"}}
+              sx={{ display: { xs: "none", sm: "block" }, color: "#ffffff" }}
             >
               Rocker Webshop
             </Typography>
@@ -260,14 +260,18 @@ export default function Nav() {
           <Box sx={{ flexGrow: 1 }} />
           {user.Name.length > 0 && (
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <IconButton size="large" aria-label="show cart" color="inherit">
-                <Badge
-                  badgeContent={user.Cart ? user.Cart.length : 0}
-                  color="secondary"
-                >
-                  <CartIcon />
-                </Badge>
-              </IconButton>
+              <Link to="/cart" color="white">
+                <IconButton size="large" aria-label="show cart" sx={{
+                  color: "#ffffff"
+                }}>
+                  <Badge
+                    badgeContent={user.Cart ? user.Cart.length : 0}
+                    color="secondary"
+                  >
+                    <CartIcon />
+                  </Badge>
+                </IconButton>
+              </Link>
               <IconButton
                 size="large"
                 edge="end"

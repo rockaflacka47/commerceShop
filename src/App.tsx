@@ -10,24 +10,29 @@ import { api } from "./Api/api";
 import { Response } from "./Types/Response";
 import {
   selectNotification,
-  setNotification,
+  setNotification as sendNotification
 } from "./Slices/NotificationSlice";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Alert } from "@mui/material";
 import { Item } from "./Components/item/Item";
 import { Cart } from "./Components/cart/Cart";
+import setNotification from "./Common/SendNotification";
+import Status from "./Components/status/Status";
+import CheckoutContainer from "./Components/checkout/CheckoutContainer";
 
 function App() {
   const dispatch = useAppDispatch();
   const notification = useAppSelector(selectNotification);
-  const [cookies, setCookie] = useCookies(["token"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
   useEffect(() => {
     if (cookies.token) {
       api.DoLoginToken(cookies.token).then((val: Response) => {
         if (val.message === "Successful") {
           dispatch(setUser(val.user));
-        } else {
+        } else if(val.message){
           //dispatch error with message
+          setNotification(val.message, "error");
+          removeCookie("token", { path: "/" });
         }
       });
     }
@@ -35,7 +40,7 @@ function App() {
 
   const closeAlert = () => {
     console.log("closing");
-    dispatch(setNotification({ text: "", severity: "error", visible: false }));
+    dispatch(sendNotification({ text: "", severity: "error", visible: false }));
   };
 
   return (
@@ -46,6 +51,7 @@ function App() {
           <Route path="/" element={<Display />} />
           <Route path="/item/:id" element={<Item />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/:id/checkoutstatus" element={<CheckoutContainer />} />
         </Routes>
         {notification.text.length > 0 && notification.visible && (
           <Alert
@@ -55,9 +61,10 @@ function App() {
             }}
             sx={{
               position: "fixed",
-              zIndex: "100",
+              zIndex: "200",
               color: "error",
               bottom: "10%",
+              left: "3%",
               width: "94vw",
             }}
           >

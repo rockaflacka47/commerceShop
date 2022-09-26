@@ -7,5 +7,7 @@ export interface Response {
     user: User,
     userId: string,
     token: string,
-    item: Item
+    item: Item,
+    response: Item[],
+    client_secret: string
 }

@@ -1,10 +1,10 @@
-.min-width-80{
-    min-width: 80%!important;
+.min-width-100{
+    min-width: 100%!important;
 }
 
 .button-box {
     margin: 2% auto !important;
-    width: 60%!important;
+    width: 100%!important;
     display: flex!important;
     justify-content: space-around!important;
 }
@@ -28,4 +28,24 @@
     padding-left: 0!important;
     width: fit-content!important;
     margin-left: 0!important;
+}
+
+.margin-auto {
+    margin:auto;
+}
+
+.description-box {
+    min-height: 17vh;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.review-box {
+    width: 65%;
+}
+
+.width-56 {
+    width: 56%;
+    height: 100%;
 }

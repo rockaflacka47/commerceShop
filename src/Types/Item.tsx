@@ -5,10 +5,10 @@ import { Review } from './Review';
 export interface Item{
     Name: String,
     Description: String,
-    Price: Number,
+    Price: number,
     Img_url: string,
     Sold: Number,
-    _id: String,
+    _id: string,
     Alternate_pictures: String [],
     Reviews: Review[]
 }

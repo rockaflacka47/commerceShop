@@ -15,71 +15,79 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import { api } from "../../Api/api";
 import { Response } from "../../Types/Response";
 //import { useDispatch } from "react-redux";
-import { useAppDispatch } from "../../hooks"; 
+import { useAppDispatch } from "../../hooks";
 import { setUser } from "../../Slices/UserSlice";
-import { useCookies } from 'react-cookie';
+import { useCookies } from "react-cookie";
 import { Checkbox, FormControlLabel } from "@mui/material";
-import { setNotification } from "../../Slices/NotificationSlice";
+import setNotification from "../../Common/SendNotification";
 
 export default function Login() {
   const dispatch = useAppDispatch();
   const theme = useTheme();
   const [fields, setFields] = useState(false);
-  const [cookies, setCookie] = useCookies(['token']);
+  const [cookies, setCookie] = useCookies(["token"]);
   let remember = false;
 
-  const handleChange = ()=>{
-      remember = !remember;
-  }
+  const handleChange = () => {
+    remember = !remember;
+  };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log(data.get("email") === "")
-      if(data.get("email") === "" || data.get("password") === "" || (fields && data.get("name") === "")){
-        setTimeout(() => dispatch(setNotification({text: "", severity: "error", visible: false})), 5000);
-        return;
+    console.log(data.get("email") === "");
+    if (
+      data.get("email") === "" ||
+      data.get("password") === "" ||
+      (fields && data.get("name") === "")
+    ) {
+      setNotification("Please fill out all fields", "error");
+      return;
     }
-    if(!fields){
-        api.DoLogin(data.get("email")?.toString(), data.get("password")?.toString()).then((val: Response)=> {
-            console.log(val);
-            if(val.message === 'Successful'){
-                console.log("dispatching")
-                if(remember){
-                    setCookie("token", val.token, { path: '/' });
-                }
-                dispatch(setUser(val.user));
+    if (!fields) {
+      api
+        .DoLogin(
+          data.get("email")?.toString(),
+          data.get("password")?.toString()
+        )
+        .then((val: Response) => {
+          console.log(val);
+          if (val.message === "Successful") {
+            console.log("dispatching");
+            if (remember) {
+              setCookie("token", val.token, { path: "/" });
             }
-            else if(val.message === 'No user exists with that email' || val.message === 'Incorrect email or password'){
-                dispatch(setNotification({text: val.message, severity: "error", visible: true}))
-                setTimeout(() => dispatch(setNotification({text: "", severity: "error", visible: false})), 5000);
-            }
-            else {
-                dispatch(setNotification({text: "Error, please try again", severity: "error", visible: true}));
-                setTimeout(() => dispatch(setNotification({text: "", severity: "error", visible: false})), 5000);
-            }
-        })
+            dispatch(setUser(val.user));
+          } else if (
+            val.message
+          ) {
+            setNotification(val.message, "error");
+          } else {
+            setNotification("Error, please try again", "error");
+          }
+        });
     } else {
-        api.CreateAccount(data.get("email")?.toString(), data.get("password")?.toString(), data.get("name")?.toString()).then((val: Response)=> {
-            console.log(val);
-            if(val.message === 'Successful'){
-                console.log("dispatching")
-                if(remember){
-                    setCookie("token", val.token, { path: '/' });
-                }
-                dispatch(setUser(val.user));
+      api
+        .CreateAccount(
+          data.get("email")?.toString(),
+          data.get("password")?.toString(),
+          data.get("name")?.toString()
+        )
+        .then((val: Response) => {
+          console.log(val);
+          if (val.message === "Successful") {
+            console.log("dispatching");
+            if (remember) {
+              setCookie("token", val.token, { path: "/" });
             }
-            else if(val.message === 'A user with that email already exists'){
-                dispatch(setNotification({text: val.message, severity: "error", visible: true}))
-                setTimeout(() => dispatch(setNotification({text: "", severity: "error", visible: false})), 5000);
-            }
-            else {
-                dispatch(setNotification({text: "Error, please try again", severity: "error", visible: true}));
-                setTimeout(() => dispatch(setNotification({text: "", severity: "error", visible: false})), 5000);
-            }
-        })
+            dispatch(setUser(val.user));
+          } else if (val.message === "A user with that email already exists") {
+            setNotification(val.message, "error");
+          } else {
+            setNotification("Error, please try again", "error");
+          }
+        });
     }
-    
   };
 
   const toggleFields = () => {
@@ -131,15 +139,21 @@ export default function Login() {
                 id="password"
                 autoComplete="current-password"
               />
-               <FormControlLabel
-                control={<Checkbox value="remember" onChange={handleChange} color="primary" />}
-                label="Remember me" 
-              /> 
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    value="remember"
+                    onChange={handleChange}
+                    color="primary"
+                  />
+                }
+                label="Remember me"
+              />
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2, bgcolor:"secondary.dark" }}
+                sx={{ mt: 3, mb: 2, bgcolor: "secondary.dark" }}
               >
                 Sign In
               </Button>
@@ -169,7 +183,7 @@ export default function Login() {
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                <AccountCircle />
+              <AccountCircle />
             </Avatar>
             <Typography component="h1" variant="h5">
               Create Account
@@ -180,7 +194,7 @@ export default function Login() {
               noValidate
               sx={{ mt: 1 }}
             >
-                <TextField
+              <TextField
                 margin="normal"
                 required
                 fullWidth
@@ -210,14 +224,20 @@ export default function Login() {
                 autoComplete="current-password"
               />
               <FormControlLabel
-                control={<Checkbox value="remember" onChange={handleChange} color="primary" />}
+                control={
+                  <Checkbox
+                    value="remember"
+                    onChange={handleChange}
+                    color="primary"
+                  />
+                }
                 label="Remember me"
-              /> 
+              />
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2, bgcolor:"secondary.dark" }}
+                sx={{ mt: 3, mb: 2, bgcolor: "secondary.dark" }}
               >
                 Create Account
               </Button>

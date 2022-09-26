@@ -2,6 +2,7 @@ import React from "react";
 import { Item } from "../Types/Item";
 import { Response } from "../Types/Response";
 import { User } from "../Types/User";
+import { userItem } from "../Types/UserItem";
 
 export const api = {
   GetItems: function (page: Number): Promise<void | Item[]> {
@@ -120,7 +121,8 @@ export const api = {
   PushToCart: function (
     email: String,
     id: String,
-    count: number
+    count: number,
+    numToPush: number
   ): Promise<Response> {
     let ret: Response;
     return fetch(
@@ -128,7 +130,37 @@ export const api = {
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ Email: email, item: { id: id, count } }),
+        body: JSON.stringify({ Email: email, item: { id: id, count }, numToPush: numToPush }),
+      }
+    )
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          ret = result;
+          return ret;
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          console.log(error);
+          return error.message;
+        }
+      );
+  },
+  RemoveFromCart: function (
+    email: String,
+    id: String,
+    count: number,
+    numToRemove: number
+  ): Promise<Response> {
+    let ret: Response;
+    return fetch(
+      "https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/RemoveFromCart",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ Email: email, item: { id: id, count }, numToRemove: numToRemove }),
       }
     )
       .then((res) => res.json())
@@ -167,5 +199,47 @@ export const api = {
           return error.message;
         }
       );
-  },
+  },GetItemsById: function (cart: userItem[]): Promise<Response> {
+    let ret: Response;
+    return fetch("https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/GetItemsById", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ Items: cart }),
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          ret = result;
+          return ret;
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          console.log(error);
+          return error.message;
+        }
+      );
+  },GetStripeSecret: function (total: number): Promise<Response> {
+    let ret: Response;
+    return fetch("https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/CreatePaymentIntent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ total: total }),
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          ret = result;
+          return ret;
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          console.log(error);
+          return error.message;
+        }
+      );
+  }
 };
