@@ -28,6 +28,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import CheckoutContainer from "../checkout/CheckoutContainer";
 import "./Cart.css";
+import CarouselDisplay from "../carousel/Carousel";
 
 export function Cart() {
   const user = useAppSelector(selectUser);
@@ -226,12 +227,15 @@ export function Cart() {
   const renderCart = (
     <Container
       sx={{
-        marginTop: "6vh",
+        marginTop: "4vh",
       }}
     >
       {showCheckout && (
         <Container>
-          <div className="background-exit" onClick={()=>setShowCheckout(false)}></div>
+          <div
+            className="background-exit"
+            onClick={() => setShowCheckout(false)}
+          ></div>
           <CheckoutContainer secret={secret} />
         </Container>
       )}
@@ -240,7 +244,7 @@ export function Cart() {
           sx={{
             display: "inline-flex",
             minWidth: "100%",
-            position: "fixed",
+            position: "sticky",
             top: { xs: "7.5vh", md: "7.5vh" },
             left: "0",
             height: { xs: "10vh", md: "7vh" },
@@ -294,7 +298,8 @@ export function Cart() {
       <Stack
         spacing={4}
         sx={{
-          marginTop: { xs: "14vh", md: "8vh" },
+          marginTop: { xs: "2vh" },
+          mb: "5vh",
         }}
       >
         {items?.map((item, index) => (
@@ -364,10 +369,12 @@ export function Cart() {
                         {item.Name}
                       </Typography>
                       <Typography component="h2" className="rating">
-                        {//@ts-ignore 
-                        ratings[index] && ratings[index] != "NaN"
-                          ? ratings[index] + "/5"
-                          : "No ratings yet"}
+                        {
+                          //@ts-ignore
+                          ratings[index] && ratings[index] != "NaN"
+                            ? ratings[index] + "/5"
+                            : "No ratings yet"
+                        }
                         <StarsIcon
                           fontSize="small"
                           className="star"
@@ -407,11 +414,13 @@ export function Cart() {
                 <Grid xs={12} md={4} margin="auto">
                   <Typography>In Cart: {counts.get(item._id)}</Typography>
                   <Typography>Cost: {currencyFormat(item.Price)}</Typography>
-                  
+
                   <Typography>
-                    Total Cost:{" "}   
-                    {//@ts-ignore 
-                    currencyFormat(counts.get(item._id) * item.Price)}
+                    Total Cost:{" "}
+                    {
+                      //@ts-ignore
+                      currencyFormat(counts.get(item._id) * item.Price)
+                    }
                   </Typography>
 
                   <Container
@@ -475,6 +484,12 @@ export function Cart() {
           </Container>
         ))}
       </Stack>
+      {/* {items && (
+        <>
+          <hr />
+          <CarouselDisplay />
+        </>
+      )} */}
     </Container>
   );
   return <div>{isLoading ? <LoadingSpinner /> : renderCart}</div>;

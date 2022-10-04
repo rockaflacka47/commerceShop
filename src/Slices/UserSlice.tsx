@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../Store/store";
 import { Item } from "../Types/Item";
+import { RecentlyViewed } from "../Types/RecentlyViewed";
 import { User } from "../Types/User";
+import { UserAccount } from "../Types/UserAccount";
 import { userItem } from "../Types/UserItem";
 
 const initialState: User = {
@@ -11,6 +13,7 @@ const initialState: User = {
   Password: "",
   Cart: [],
   RecentlyViewed: [],
+  Type: UserAccount.Customer
 };
 export const userSlice = createSlice({
   name: "user",
@@ -23,6 +26,7 @@ export const userSlice = createSlice({
       state.Password = user.payload.Password;
       state.Cart = user.payload.Cart;
       state.RecentlyViewed = user.payload.RecentlyViewed;
+      state.Type = user.payload.Type;
     },
     addToCart: (state, item: PayloadAction<userItem>) => {
       let index: number = state.Cart.findIndex((e) => {
@@ -44,7 +48,7 @@ export const userSlice = createSlice({
       });
 
       if (item.payload.count === 0) {
-        state.Cart.splice(index);
+        state.Cart.splice(index, 1);
       } else {
         let newItem: userItem = {
           id: item.payload.id,
@@ -53,10 +57,25 @@ export const userSlice = createSlice({
         state.Cart[index] = newItem;
       }
     },
+    addToRecentlyViewed: (state, item: PayloadAction<RecentlyViewed>) => {
+      let index: number = state.RecentlyViewed.findIndex((e) => {
+        return e.id === item.payload.id;
+      });
+      if (index > -1){
+        return;
+      }
+      let tempArray: RecentlyViewed[] = [item.payload, ...state.RecentlyViewed]
+      if(state.RecentlyViewed.length >= 5){
+        tempArray.splice(5);
+       
+      }
+      state.RecentlyViewed = tempArray;
+      console.log(state.RecentlyViewed);
+    },
   },
 });
 
-export const { setUser, addToCart, removeFromCart } = userSlice.actions;
+export const { setUser, addToCart, removeFromCart, addToRecentlyViewed } = userSlice.actions;
 
 export const selectUser = (state: RootState) => state.user;
 

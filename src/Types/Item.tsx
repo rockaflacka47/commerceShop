@@ -3,7 +3,7 @@ import { Review } from './Review';
 
 
 export interface Item{
-    Name: String,
+    Name: string,
     Description: String,
     Price: number,
     Img_url: string,

@@ -16,7 +16,7 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { Link, useParams, useLocation } from "react-router-dom";
 import { api } from "../../Api/api";
 import { useAppSelector, useAppDispatch } from "../../hooks";
-import { selectUser, addToCart, removeFromCart } from "../../Slices/UserSlice";
+import { selectUser, addToCart, removeFromCart, addToRecentlyViewed } from "../../Slices/UserSlice";
 import { Item as displayItem } from "../../Types/Item";
 import currencyFormat from "../../Common/CurrencyFormat";
 import LoadingSpinner from "../loadingSpinner/loadingSpinner";
@@ -28,6 +28,7 @@ import { ArrowBack } from "@mui/icons-material";
 import { userItem } from "../../Types/UserItem";
 
 import setNotification from "../../Common/SendNotification";
+import { RecentlyViewed } from "../../Types/RecentlyViewed";
 
 const defualtItem: displayItem = {
   _id: "",
@@ -40,8 +41,8 @@ const defualtItem: displayItem = {
   Reviews: [],
 };
 export function Item() {
-    const location = useLocation()
-  const { lastPage } = location.state
+  const location = useLocation();
+  const { lastPage } = location.state;
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const [item, setItem] = useState<displayItem>(defualtItem);
@@ -50,6 +51,8 @@ export function Item() {
   const [isLoading, setIsLoading] = useState(false);
   const [inProgress, setInProgress] = useState(false);
   const [quantToAdd, setQuantToAdd] = useState<string>("1");
+  const [rating, setRating] = useState<number | string>(0);
+  const [review, setReview] = useState<string>("");
   const { id } = useParams();
 
   const theme = useTheme();
@@ -59,6 +62,13 @@ export function Item() {
       if (val.item) {
         setItem(val.item);
         setIsLoading(false);
+        let viewedObj: RecentlyViewed = {
+          id: val.item._id,
+          img_url: val.item.Img_url,
+          name: val.item.Name
+        }
+        dispatch(addToRecentlyViewed(viewedObj))
+        
       } else {
         setIsLoading(false);
         setNotification("Error loading item, please try again", "error");
@@ -66,15 +76,18 @@ export function Item() {
     });
   }, []);
 
-  useEffect(() => {
-    if (user.Name.length > 0) {
-      setQuantity(searchCart());
-    }
+  const calculateRating = ()=> {
     let total = 0;
     item.Reviews.map((review) => {
       total += review.Rating;
     });
     setOverallRating(Math.round((total / item.Reviews.length) * 10) / 10);
+  }
+  useEffect(() => {
+    if (user.Name.length > 0) {
+      setQuantity(searchCart());
+    } 
+    calculateRating();
   }, [item]);
 
   useEffect(() => {
@@ -90,15 +103,15 @@ export function Item() {
 
   const pushToCart = () => {
     if (user.Name.length < 1) {
-        setNotification("Please login to add to cart", "error");
+      setNotification("Please login to add to cart", "error");
       return;
     }
     if (!quantToAdd) {
-        setNotification("Please enter a quantity", "error");
+      setNotification("Please enter a quantity", "error");
       return;
     }
     if (parseInt(quantToAdd) < 1) {
-        setNotification("Please enter a quantity greater than 0", "error");
+      setNotification("Please enter a quantity greater than 0", "error");
       return;
     }
     let index: number = user.Cart.findIndex((e) => {
@@ -143,16 +156,19 @@ export function Item() {
     });
     let count;
     if (index < 0) {
-        setNotification("This item is not in your cart.", "error");
+      setNotification("This item is not in your cart.", "error");
       return;
     }
     if (!quantToAdd) {
-        setNotification("Please enter a quantity", "error");
+      setNotification("Please enter a quantity", "error");
       return;
     }
     count = user.Cart[index];
     if (count.count < parseInt(quantToAdd)) {
-        setNotification("Cannot remove more then what is currently in the cart.", "error");
+      setNotification(
+        "Cannot remove more then what is currently in the cart.",
+        "error"
+      );
       return;
     }
     let obj: userItem = {
@@ -183,6 +199,42 @@ export function Item() {
       setQuantToAdd(event.target.value);
     }
   };
+
+  const submitReview = ()=>{
+    if(!user.Name.length){
+      setNotification("Please login to leave a review", "error");
+      return;
+    }
+    if(isNaN(parseFloat(rating.toString())) || review === ""){
+      setNotification("Please fill out the review and give a rating", "error");
+      return;
+    }
+
+    api.AddReview(user.Name, review, parseFloat(rating.toString()), item._id).then((val)=>{
+      if(val.message === 'Successfully added review'){
+        let reviews = item.Reviews;
+    
+        reviews.push({
+          User_name: user.Name,
+          Review: review,
+          Rating: parseFloat(rating.toString())
+        })
+  
+        let tempitem = item;
+        tempitem.Reviews = reviews;
+  
+        setItem(tempitem);
+        calculateRating();
+        setReview("");
+        setRating(0);
+        setNotification(val.message, "success");
+      } else{
+        setNotification(val.message, "error");
+      }
+      
+
+    })
+  }
 
   const renderItem = (
     <Container>
@@ -254,22 +306,20 @@ export function Item() {
                 Total Cost: {currencyFormat(quantity * item.Price)}
               </Typography>
               <Grid container className="button-box">
-                {quantity > 0 && (
-                  <Grid xs={12} md={4}>
-                    <Button
-                      variant="outlined"
-                      onClick={removeCart}
-                      color="warning"
-                      className="min-width-100"
-                      disabled={inProgress}
-                      sx={{
-                        minHeight: { xs: "10vh", md: "12vh", lg: "10vh" },
-                      }}
-                    >
-                      Remove from cart
-                    </Button>
-                  </Grid>
-                )}
+                <Grid xs={12} md={4}>
+                  <Button
+                    variant="outlined"
+                    onClick={removeCart}
+                    color="warning"
+                    className="min-width-100"
+                    disabled={inProgress || !(quantity > 0)}
+                    sx={{
+                      minHeight: { xs: "10vh", md: "12vh", lg: "10vh" },
+                    }}
+                  >
+                    Remove from cart
+                  </Button>
+                </Grid>
                 <Grid
                   xs={12}
                   md={3}
@@ -332,6 +382,8 @@ export function Item() {
               placeholder="Leave a review..."
               multiline
               className="review-box"
+              value={review}
+              onChange={(e)=>setReview(e.target.value)}
               minRows={4}
             />
           </Grid>
@@ -342,6 +394,10 @@ export function Item() {
                 placeholder="Rating"
                 type="number"
                 id="rating"
+                inputProps={{
+                  step: .1,
+                }}
+                onChange={(e)=>setRating(parseFloat(e.target.value))}
                 sx={{
                   width: { xs: "100%", md: "56%" },
                 }}
@@ -351,6 +407,7 @@ export function Item() {
               <Button
                 color="warning"
                 variant="outlined"
+                onClick={submitReview}
                 sx={{
                   width: { xs: "100%", md: "56%" },
                   height: "100%",
@@ -373,9 +430,13 @@ export function Item() {
               {item.Reviews &&
                 item.Reviews.length > 0 &&
                 item.Reviews.map((review) => (
-                  <Card key={review.Review} variant="outlined" sx={{
-                      borderColor: "primary.main"
-                  }}>
+                  <Card
+                    key={review.Review}
+                    variant="outlined"
+                    sx={{
+                      borderColor: "primary.main",
+                    }}
+                  >
                     <CardContent>
                       <Grid container spacing={1}>
                         <Grid xs={6}>

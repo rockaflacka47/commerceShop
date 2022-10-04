@@ -19,20 +19,28 @@ import { Cart } from "./Components/cart/Cart";
 import setNotification from "./Common/SendNotification";
 import Status from "./Components/status/Status";
 import CheckoutContainer from "./Components/checkout/CheckoutContainer";
+import LoadingSpinner from "./Components/loadingSpinner/loadingSpinner";
+import AddItem from "./Components/additem/AddItem";
+import MainPage from "./Components/mainpage/Mainpage";
 
 function App() {
   const dispatch = useAppDispatch();
   const notification = useAppSelector(selectNotification);
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   useEffect(() => {
     if (cookies.token) {
+      setIsLoading(true);
       api.DoLoginToken(cookies.token).then((val: Response) => {
+        console.log(val);
         if (val.message === "Successful") {
           dispatch(setUser(val.user));
+          setIsLoading(false);
         } else if(val.message){
           //dispatch error with message
           setNotification(val.message, "error");
           removeCookie("token", { path: "/" });
+          setIsLoading(false);
         }
       });
     }
@@ -43,15 +51,16 @@ function App() {
     dispatch(sendNotification({ text: "", severity: "error", visible: false }));
   };
 
-  return (
+  const renderApp = (
     <BrowserRouter>
       <div className="App">
         <Nav />
         <Routes>
-          <Route path="/" element={<Display />} />
+          <Route path="/" element={<MainPage />} />
           <Route path="/item/:id" element={<Item />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/:id/checkoutstatus" element={<CheckoutContainer />} />
+          <Route path="/admin/addItem" element={<AddItem />} />
         </Routes>
         {notification.text.length > 0 && notification.visible && (
           <Alert
@@ -74,6 +83,8 @@ function App() {
       </div>
     </BrowserRouter>
   );
+
+  return <div>{isLoading ? <LoadingSpinner /> : renderApp}</div>;
 }
 
 export default App;

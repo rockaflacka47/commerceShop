@@ -9,5 +9,11 @@ export interface Response {
     token: string,
     item: Item,
     response: Item[],
-    client_secret: string
+    client_secret: string,
+}
+
+export interface S3Response {
+    fileUploadURL: string,
+    url: string,
+    status: number
 }

@@ -26,6 +26,8 @@ import { User } from "../../Types/User";
 import { ThemeProvider, useTheme } from "@mui/material/styles";
 import { useCookies } from "react-cookie";
 import { Link } from "react-router-dom";
+import { UserAccount } from "../../Types/UserAccount";
+import zIndex from "@mui/material/styles/zIndex";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -76,16 +78,14 @@ export default function Nav() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
 
+  const [showLogin, setShowLogin] = useState<boolean>(false);
+
   let isMenuOpen = Boolean(anchorEl);
   let isLoginOpen = Boolean(loginEl);
   let isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-  };
-
-  const handleLoginMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setLoginEl(event.currentTarget);
   };
 
   const handleMobileMenuClose = () => {
@@ -100,14 +100,10 @@ export default function Nav() {
     handleMobileMenuClose();
   };
 
-  const handleLoginClose = () => {
-    // isLoginOpen = false;
-    setLoginEl(null);
-  };
-
   const doLogout = () => {
     isMenuOpen = false;
     isLoginOpen = false;
+    setShowLogin(false);
     dispatch(
       setUser({
         _id: "",
@@ -116,6 +112,7 @@ export default function Nav() {
         Password: "",
         Cart: [],
         RecentlyViewed: [],
+        Type: UserAccount.Customer,
       })
     );
     if (cookies.token) {
@@ -145,30 +142,17 @@ export default function Nav() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={doLogout}>Logout</MenuItem>
-    </Menu>
-  );
-  const loginId = "primary-login-menu";
-  const renderLogin = (
-    <Menu
-      anchorEl={loginEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "left",
-      }}
-      id={loginId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "left",
-      }}
-      sx={[
-        { display: { xs: "flex", sm: "block" } },
-        { width: { xs: "100vw", sm: "auto" } },
-      ]}
-      open={isLoginOpen}
-      onClose={handleLoginClose}
-    >
-      <Login />
+      {user.Type === UserAccount.Admin && (
+        <Link to="/admin/addItem">
+          <MenuItem
+            sx={{
+              color: "black",
+            }}
+          >
+            Add Item
+          </MenuItem>
+        </Link>
+      )}
     </Menu>
   );
 
@@ -189,36 +173,28 @@ export default function Nav() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <Link to="/cart">
-        <IconButton size="large" aria-label="show card" color="inherit">
-          <Badge
-            badgeContent={user.Cart ? user.Cart.length : 0}
-            color="secondary"
-          >
-            <CartIcon />
-          </Badge>
-        </IconButton>
-        <p>Shopping Cart</p>
-      </Link>
       <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
+        <p>Logout</p>
       </MenuItem>
+      {user.Type === UserAccount.Admin && (
+        <Link to="/admin/addItem">
+          <MenuItem
+            onClick={handleMenuClose}
+            sx={{
+              color: "black",
+            }}
+          >
+            Add Item
+          </MenuItem>
+        </Link>
+      )}
     </Menu>
   );
 
   useEffect(() => {
     // handleMenuClose;
     if (user.Name.length > 0) {
-      handleLoginClose;
+      setShowLogin(false);
     } else {
       handleMenuClose;
     }
@@ -261,9 +237,13 @@ export default function Nav() {
           {user.Name.length > 0 && (
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
               <Link to="/cart" color="white">
-                <IconButton size="large" aria-label="show cart" sx={{
-                  color: "#ffffff"
-                }}>
+                <IconButton
+                  size="large"
+                  aria-label="show cart"
+                  sx={{
+                    color: "#ffffff",
+                  }}
+                >
                   <Badge
                     badgeContent={user.Cart ? user.Cart.length : 0}
                     color="secondary"
@@ -287,6 +267,22 @@ export default function Nav() {
           )}
           {user.Name.length > 0 && (
             <Box sx={{ display: { xs: "flex", md: "none" } }}>
+              <Link to="/cart" color="white">
+                <IconButton
+                  size="large"
+                  aria-label="show cart"
+                  sx={{
+                    color: "#ffffff",
+                  }}
+                >
+                  <Badge
+                    badgeContent={user.Cart ? user.Cart.length : 0}
+                    color="secondary"
+                  >
+                    <CartIcon />
+                  </Badge>
+                </IconButton>
+              </Link>
               <IconButton
                 size="large"
                 aria-label="show more"
@@ -307,17 +303,40 @@ export default function Nav() {
                     cursor: "pointer",
                   },
                 }}
-                onClick={handleLoginMenuOpen}
+                onClick={() => {
+                  console.log(isLoginOpen);
+                  setShowLogin(true);
+                }}
               >
                 Login
               </Typography>
+              {showLogin && (
+                <Container>
+                  <div className="background-exit" onClick={()=>setShowLogin(false)}></div>
+                  <Container
+                    sx={[
+                      { display: { xs: "flex", sm: "block" } },
+                      { width: { xs: "100vw", sm: "auto" } },
+                      {
+                        position: "fixed",
+                        top: "6vh",
+                        right: 5,
+                        background: "white",
+                        zIndex: 120
+                      },
+                    ]}
+                  >
+                    <Login />
+                  </Container>
+                </Container>
+              )}
             </Box>
           )}
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
-      {!(user.Name.length > 0) && renderLogin}
+      {/* {!(user.Name.length > 0) && renderLogin} */}
     </Box>
   );
 }

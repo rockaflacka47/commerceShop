@@ -14,3 +14,7 @@
     border-radius: 50%;
     animation: spinner 1.5s linear infinite;
   }
+
+  .margin-auto {
+    margin: auto
+  }

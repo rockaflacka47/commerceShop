@@ -21,16 +21,16 @@ import { selectNotification } from "../../Slices/NotificationSlice";
 import setNotification from "../../Common/SendNotification";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../loadingSpinner/loadingSpinner";
+import CarouselDisplay from "../carousel/Carousel";
 
 export default function Display() {
   const theme = useTheme();
-  console.log(theme)
   const user = useAppSelector(selectUser);
   const notification = useAppSelector(selectNotification);
   const dispatch = useAppDispatch();
   const [items, setItems] = useState<Item[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [inProgress, setInProgress ] = useState(false);
+  const [inProgress, setInProgress] = useState(false);
   let page: Number = 0;
 
   useEffect(() => {
@@ -51,6 +51,7 @@ export default function Display() {
 
   const pushToCart = (item: Item) => {
     if (user.Name.length < 1) {
+      setNotification("Please login to add to cart", "error");
       return;
     }
     let index: number = user.Cart.findIndex((e) => {
@@ -102,7 +103,7 @@ export default function Display() {
             {/* End hero unit */}
             <Grid container spacing={4}>
               {items.map((i) => (
-                <Grid item key={i._id as Key} xs={12} sm={6} md={4}>
+                <Grid item key={i._id as Key} xs={6} sm={4} md={3}>
                   <Card
                     sx={{
                       height: "100%",
@@ -114,16 +115,24 @@ export default function Display() {
                       to={{
                         pathname: "/item/" + i._id,
                       }}
-
-                      state={{lastPage: "/"}}
+                      state={{ lastPage: "/" }}
                     >
                       <CardMedia
                         component="img"
                         image={i.Img_url}
                         alt={i.Name.toString()}
+                        sx={{
+                          minHeight: "50%",
+                        }}
                       />
                       <CardContent sx={{ flexGrow: 1, color: "text.primary" }}>
-                        <Typography gutterBottom variant="h5" component="h2">
+                        <Typography gutterBottom variant="h5" component="h2" sx={{
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            display: "-webkit-box",
+                            WebkitLineClamp: "1",
+                            WebkitBoxOrient: "vertical",
+                          }}>
                           {i.Name}
                         </Typography>
                         <Typography
@@ -167,6 +176,8 @@ export default function Display() {
           </Container>
         )}
       </main>
+      <hr />
+      <CarouselDisplay />
     </ThemeProvider>
   );
   return <div>{isLoading ? <LoadingSpinner /> : renderDisplay}</div>;

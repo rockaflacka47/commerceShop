@@ -58,9 +58,7 @@ export default function Login() {
               setCookie("token", val.token, { path: "/" });
             }
             dispatch(setUser(val.user));
-          } else if (
-            val.message
-          ) {
+          } else if (val.message) {
             setNotification(val.message, "error");
           } else {
             setNotification("Error, please try again", "error");
@@ -110,7 +108,13 @@ export default function Login() {
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
               <LockOutlinedIcon />
             </Avatar>
-            <Typography component="h1" variant="h5">
+            <Typography
+              component="h1"
+              variant="h5"
+              sx={{
+                color: "black",
+              }}
+            >
               Sign in
             </Typography>
             <Box
@@ -139,16 +143,21 @@ export default function Login() {
                 id="password"
                 autoComplete="current-password"
               />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    value="remember"
-                    onChange={handleChange}
-                    color="primary"
-                  />
-                }
-                label="Remember me"
-              />
+              <Container>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      value="remember"
+                      onChange={handleChange}
+                      color="primary"
+                    />
+                  }
+                  sx={{
+                    color: "black",
+                  }}
+                  label="Remember me"
+                />
+              </Container>
               <Button
                 type="submit"
                 fullWidth
@@ -185,7 +194,13 @@ export default function Login() {
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
               <AccountCircle />
             </Avatar>
-            <Typography component="h1" variant="h5">
+            <Typography
+              component="h1"
+              variant="h5"
+              sx={{
+                color: "black",
+              }}
+            >
               Create Account
             </Typography>
             <Box
@@ -231,6 +246,9 @@ export default function Login() {
                     color="primary"
                   />
                 }
+                sx={{
+                  color: "black",
+                }}
                 label="Remember me"
               />
               <Button

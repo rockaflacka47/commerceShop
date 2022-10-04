@@ -1,6 +1,6 @@
 import React from "react";
 import { Item } from "../Types/Item";
-import { Response } from "../Types/Response";
+import { Response, S3Response } from "../Types/Response";
 import { User } from "../Types/User";
 import { userItem } from "../Types/UserItem";
 
@@ -241,5 +241,114 @@ export const api = {
           return error.message;
         }
       );
-  }
+  },
+  GetS3Url: function (file: string): Promise<S3Response> {
+    let ret: Response;
+    console.log(file);
+    return fetch("https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/UploadImageWebshop", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        fileName: file
+      }),
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+          ret = result;
+          return ret;
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          console.log(error);
+          return error.message;
+        }
+      );
+  },
+  UploadToS3: function (url: string, file: File | null): Promise<S3Response> {
+    let ret;
+    console.log(url)
+    console.log(file);
+    return fetch(url, {
+      method: "PUT",
+      headers: { "Content-Type": "multipart/form-data" },
+      body: file
+    })
+      .then(
+        (result) => {
+          console.log(result.url);
+          ret = result;
+          return ret;
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          console.log(error);
+          return error.message;
+        }
+      );
+  },
+  AddItem: function (name: string, price: number, description: string, img_url: string): Promise<Response> {
+    let ret: Response;
+    console.log(price);
+    return fetch("https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/AddItem", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        Name: name,
+        Price: price,
+        Description: description,
+        Img_url: img_url,
+        Sold: 0,
+        Reviews: []
+      }),
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+          ret = result;
+          return ret;
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          console.log(error);
+          return error.message;
+        }
+      );
+  },
+  AddReview: function (name: string, review: string, rating: number, id: string): Promise<Response> {
+    let ret: Response;
+    return fetch("https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/AddReview", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: id,
+        User_name: name,
+        Review: review,
+        Rating: rating
+      }),
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+          ret = result;
+          return ret;
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          console.log(error);
+          return error.message;
+        }
+      );
+  },
 };
