@@ -1,45 +1,4 @@
-.arrow {
-    position: absolute;
-    color: white!important;
-    background: gray;
-    margin-top: 8.5%;
-    z-index: 100;
-    opacity: 70%;
-}
-
-.forward {
-    margin-left: -25px;
-}
-
-.back {
-    margin-right: -25px;
-    
-}
 
 .arrow:hover {
     cursor: pointer;
-}
-
-.side-cover {
-    height: 100%;
-    width: 100%;
-    z-index: 100;
-}
-
-.arrow-box {
-    /* display: inline-flex!important;
-    position: absolute;
-    /* margin-left: -25px!important; */
-    height: 220px;
-    align-items: center;
-    max-width: 10px;
-   
-    margin-left: -48px!important;
-   
-    justify-content: center; */
-}
-
-.arrow-box:hover {
-    cursor: pointer;
-    background: gray;
 }

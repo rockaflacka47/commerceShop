@@ -4,12 +4,12 @@ import ReactDOM from "react-dom";
 //@ts-ignore
 import { Carousel } from "3d-react-carousal";
 import ImageLink from "./ImageLink";
-import { Card, CardMedia, Container, IconButton } from "@mui/material";
+import { Card, Container } from "@mui/material";
 import { useAppSelector } from "../../hooks";
 import { selectUser } from "../../Slices/UserSlice";
 import Grid2 from "@mui/material/Unstable_Grid2";
-import { ArrowBack, ArrowForward, RotateLeft } from "@mui/icons-material";
-import { display } from "@mui/system";
+import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
+import { motion } from "framer-motion";
 
 import "./Carousel.css";
 export default function CarouselDisplay() {
@@ -62,7 +62,7 @@ function CaroselD(props) {
     if (reverse) tempArray.unshift(tempArray.pop());
     else tempArray.push(tempArray.shift());
     setDisplayElements(tempArray);
-    console.log(displayElements[0])
+    console.log(displayElements[0]);
     setRerender(!rerender);
   };
 
@@ -85,7 +85,21 @@ function CaroselD(props) {
             alignItems: "center",
           }}
         >
+          <Grid2 xs={1}>
+            <ArrowBackIos
+              fontSize="large"
+              className="arrow"
+              onClick={() => {
+                rotate(true);
+              }}
+            />
+          </Grid2>
+
           <Grid2 xs={3}>
+            {/* <motion.div
+              animate={{ opacity: 0 }}
+              transition={{ ease: "easeOut", duration: 1 }}
+            > */}
             <Card
               sx={{
                 opacity: "50%",
@@ -93,38 +107,44 @@ function CaroselD(props) {
             >
               {displayElements[displayElements.length - 1]}
             </Card>
+            {/* </motion.div> */}
           </Grid2>
           <Grid2 xs={4}>
-            <Card
-              sx={{
-                zIndex: "10",
-              }}
-            >
-              <ArrowBack
-                className="back arrow"
-                onClick={() => {
-                  rotate(true);
+            {/* <motion.div
+              animate={{ opacity: 0.5, x: -250 }}
+              transition={{ ease: "easeOut", duration: 1 }}
+            > */}
+              <Card
+                sx={{
+                  zIndex: "10",
                 }}
-              />
-              {displayElements[0]}
-              {/* <Container className=""> */}
-                <ArrowForward
-                  className="forward arrow"
-                  onClick={() => {
-                    rotate(false);
-                  }}
-                />
-              {/* </Container> */}
-            </Card>
+              >
+                {displayElements[0]}
+              </Card>
+            {/* </motion.div> */}
           </Grid2>
           <Grid2 xs={3}>
-            <Card
-              sx={{
-                opacity: "50%",
+            {/* <motion.div
+              animate={{ opacity: 2, x: -250 }}
+              transition={{ ease: "easeOut", duration: 1 }}
+            > */}
+              <Card
+                sx={{
+                  opacity: "50%",
+                }}
+              >
+                {displayElements[1]}
+              </Card>
+            {/* </motion.div> */}
+          </Grid2>
+          <Grid2 xs={1}>
+            <ArrowForwardIos
+              fontSize="large"
+              className="arrow"
+              onClick={() => {
+                rotate(false);
               }}
-            >
-              {displayElements[1]}
-            </Card>
+            />
           </Grid2>
         </Grid2>
       )}

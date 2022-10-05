@@ -311,6 +311,7 @@ export function Cart() {
                 mt: { xs: "2vh", md: "0" },
                 maxHeight: { xs: "unset", md: "25vh" },
                 maxWidth: "75vw",
+                mx: "auto"
               }}
             >
               <Grid
@@ -484,12 +485,12 @@ export function Cart() {
           </Container>
         ))}
       </Stack>
-      {/* {items && (
+      {items && (
         <>
           <hr />
           <CarouselDisplay />
         </>
-      )} */}
+      )}
     </Container>
   );
   return <div>{isLoading ? <LoadingSpinner /> : renderCart}</div>;
