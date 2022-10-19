@@ -60,7 +60,6 @@ function CaroselD(props) {
     if (reverse) tempArray.unshift(tempArray.pop());
     else tempArray.push(tempArray.shift());
     setDisplayElements(tempArray);
-    console.log(displayElements[0]);
     setRerender(!rerender);
   };
 
