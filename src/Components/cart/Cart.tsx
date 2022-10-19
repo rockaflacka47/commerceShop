@@ -59,17 +59,19 @@ export function Cart() {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     initializePage();
   }, []);
 
   useEffect(() => {
     if (user.Name.length > 0 && !update) {
+      setIsLoading(true);
       initializePage();
     }
   }, [user]);
 
   const initializePage = () => {
-    setIsLoading(true);
+   
     setUpCount();
     setCounts(countMap);
     setQuantToAdd(quantMap);
