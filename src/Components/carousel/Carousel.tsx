@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 
-//@ts-ignore
-import { Carousel } from "3d-react-carousal";
 import ImageLink from "./ImageLink";
 import { Card, Container } from "@mui/material";
 import { useAppSelector } from "../../hooks";
