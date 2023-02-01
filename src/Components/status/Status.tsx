@@ -6,11 +6,19 @@ import LoadingSpinner from "../loadingSpinner/loadingSpinner";
 import DisplayStatus from "./DisplayStatus";
 import SuccessStatus from "./SuccessStatus";
 import ProcessingStatus from "./ProcessingStatus";
+import { useAppSelector } from "../../hooks";
+import { selectUser, setUser } from "../../Slices/UserSlice";
+import { api } from "../../Api/api";
+import { useAppDispatch } from "../../hooks";
 
 export default function Status() {
   const stripe = useStripe();
+  const user = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
   const [paymentStatus, setPaymentStatus] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [address, setAddress] = useState({});
 
   useEffect(() => {
     if (!stripe) {
@@ -20,15 +28,23 @@ export default function Status() {
       "payment_intent_client_secret"
     );
 
-    console.log(clientSecret);
     if (clientSecret) {
       setIsLoading(true);
       stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
         console.log(paymentIntent);
+        if (user.Email === "") {
+          if (paymentIntent?.receipt_email) {
+            api.DoLoginEmail(paymentIntent.receipt_email).then((val) => {
+              dispatch(setUser(val.user));
+            });
+          }
+        }
 
         if (paymentIntent) {
           switch (paymentIntent.status) {
             case "succeeded":
+              //@ts-ignore
+             setAddress(paymentIntent.shipping);
             case "processing":
               setPaymentStatus(paymentIntent.status);
               break;
@@ -57,20 +73,16 @@ export default function Status() {
   }, [stripe]);
 
   useEffect(() => {
+    console.log(address);
     setIsLoading(false);
-    console.log("rendering");
   }, [paymentStatus]);
 
   const renderStatus = (
     <Container>
-      {paymentStatus === "succeeded" && (
-            <SuccessStatus />
-      )}
-        {paymentStatus === "processing" && (
-            <ProcessingStatus />
-        )}
+      {paymentStatus === "succeeded" && <SuccessStatus address={address}/>}
+      {paymentStatus === "processing" && <ProcessingStatus />}
       {paymentStatus === "requires_payment_method" && (
-        <DisplayStatus status={paymentStatus} />
+        <DisplayStatus status={paymentStatus}/>
       )}
     </Container>
   );

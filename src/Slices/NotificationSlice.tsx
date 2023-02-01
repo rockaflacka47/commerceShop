@@ -14,7 +14,6 @@ export const notificationSlice = createSlice({
   initialState,
   reducers: {
     setNotification: (state, notif: PayloadAction<Notification>) => {
-      console.log(notif);
       state.text = notif.payload.text;
       state.severity = notif.payload.severity;
       state.visible = notif.payload.visible;

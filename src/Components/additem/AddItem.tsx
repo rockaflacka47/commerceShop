@@ -1,36 +1,30 @@
 import {
   useTheme,
-  ThemeProvider,
   Container,
   CssBaseline,
   Box,
   Typography,
   Avatar,
   TextField,
-  FormControlLabel,
   Button,
   Grid,
 } from "@mui/material";
 import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import { useAppDispatch } from "../../hooks";
 import setNotification from "../../Common/SendNotification";
 import { api } from "../../Api/api";
 
 export default function AddItem() {
-  const dispatch = useAppDispatch();
-  const theme = useTheme();
-  const [fields, setFields] = useState(false);
   const [err, setErr] = useState(false);
   const [name, setName] = useState("");
   const [price, setPrice] = useState<number | string>(0);
-  const [showPrice, setShowPrice] = useState<number>(0);
   const [description, setDescription] = useState("");
   const [imgUrl, setImgUrl] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    //check if all fields are filled out
     if (name === "" || isNaN(parseFloat(price.toString())) || description === "") {
       setErr(true);
       setNotification("Please fill out all fields", "error");
@@ -66,8 +60,6 @@ export default function AddItem() {
       event.target.files[0] != null
     ) {
       api.GetS3Url(event.target.files[0].name).then((val) => {
-        console.log(val);
-
         if (val.fileUploadURL) {
           api //@ts-ignore
             .UploadToS3(val.fileUploadURL, event.target.files[0])
@@ -81,7 +73,6 @@ export default function AddItem() {
                   "error"
                 );
               }
-              console.log(res);
             });
         } else {
           setNotification(
@@ -96,11 +87,9 @@ export default function AddItem() {
   //@ts-ignore
   const setP = (e) => {
       setPrice(parseFloat(e.target.value))
-     
   }
 
   const renderForm = (
-    <ThemeProvider theme={theme}>
       <Container
         component="main"
         sx={{
@@ -221,7 +210,6 @@ export default function AddItem() {
           </Box>
         </Box>
       </Container>
-    </ThemeProvider>
   );
   return renderForm;
 }

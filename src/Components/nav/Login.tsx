@@ -26,16 +26,22 @@ export default function Login() {
   const theme = useTheme();
   const [fields, setFields] = useState(false);
   const [cookies, setCookie] = useCookies(["token"]);
-  let remember = false;
+  const [isChecked, setIsChecked] = useState(true);
+  let remember = true;
 
   const handleChange = () => {
-    remember = !remember;
+
+    setIsChecked(!isChecked)
   };
+
+  useEffect(()=>{
+    console.log(isChecked);
+    remember = isChecked;
+  }, [isChecked])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log(data.get("email") === "");
     if (
       data.get("email") === "" ||
       data.get("password") === "" ||
@@ -148,6 +154,7 @@ export default function Login() {
                   control={
                     <Checkbox
                       value="remember"
+                      checked={isChecked}
                       onChange={handleChange}
                       color="primary"
                     />
@@ -242,6 +249,7 @@ export default function Login() {
                 control={
                   <Checkbox
                     value="remember"
+                    checked
                     onChange={handleChange}
                     color="primary"
                   />

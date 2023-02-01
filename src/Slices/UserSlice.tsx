@@ -70,7 +70,6 @@ export const userSlice = createSlice({
        
       }
       state.RecentlyViewed = tempArray;
-      console.log(state.RecentlyViewed);
     },
   },
 });

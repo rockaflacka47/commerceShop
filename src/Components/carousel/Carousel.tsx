@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
 
 import ImageLink from "./ImageLink";
 import { Card, Container } from "@mui/material";
@@ -7,14 +6,12 @@ import { useAppSelector } from "../../hooks";
 import { selectUser } from "../../Slices/UserSlice";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
-import { motion } from "framer-motion";
 
 import "./Carousel.css";
 export default function CarouselDisplay() {
   const user = useAppSelector(selectUser);
   const [slides, setSlides] = useState<JSX.Element[]>([]);
   const [showSlides, setShowSlides] = useState(false);
-  //   let slides = [];
   const createArray = () => {
     let tempArray: JSX.Element[] = [];
     user.RecentlyViewed.forEach((val) => {
@@ -25,12 +22,6 @@ export default function CarouselDisplay() {
     setSlides(tempArray);
     setShowSlides(true);
   };
-
-  //   useEffect(() => {
-  //     if (user.Name.length > 0) {
-  //       createArray();
-  //     }
-  //   }, []);
 
   useEffect(() => {
     if (user.Name.length > 0) {
@@ -51,13 +42,21 @@ export default function CarouselDisplay() {
   );
 }
 
-function CaroselD(props) {
+interface carouselProp {
+  elements: JSX.Element[];
+  autoplay: boolean;
+  interval: number;
+}
+
+function CaroselD(props: carouselProp) {
   const [displayElements, setDisplayElements] = useState(props.elements);
   const [rerender, setRerender] = useState(false);
 
-  const rotate = (reverse) => {
+  const rotate = (reverse: boolean) => {
     let tempArray = displayElements;
+    //@ts-ignore
     if (reverse) tempArray.unshift(tempArray.pop());
+    //@ts-ignore
     else tempArray.push(tempArray.shift());
     setDisplayElements(tempArray);
     setRerender(!rerender);
@@ -93,10 +92,6 @@ function CaroselD(props) {
           </Grid2>
 
           <Grid2 xs={3}>
-            {/* <motion.div
-              animate={{ opacity: 0 }}
-              transition={{ ease: "easeOut", duration: 1 }}
-            > */}
             <Card
               sx={{
                 opacity: "50%",
@@ -104,35 +99,24 @@ function CaroselD(props) {
             >
               {displayElements[displayElements.length - 1]}
             </Card>
-            {/* </motion.div> */}
           </Grid2>
           <Grid2 xs={4}>
-            {/* <motion.div
-              animate={{ opacity: 0.5, x: -250 }}
-              transition={{ ease: "easeOut", duration: 1 }}
-            > */}
-              <Card
-                sx={{
-                  zIndex: "10",
-                }}
-              >
-                {displayElements[0]}
-              </Card>
-            {/* </motion.div> */}
+            <Card
+              sx={{
+                zIndex: "10",
+              }}
+            >
+              {displayElements[0]}
+            </Card>
           </Grid2>
           <Grid2 xs={3}>
-            {/* <motion.div
-              animate={{ opacity: 2, x: -250 }}
-              transition={{ ease: "easeOut", duration: 1 }}
-            > */}
-              <Card
-                sx={{
-                  opacity: "50%",
-                }}
-              >
-                {displayElements[1]}
-              </Card>
-            {/* </motion.div> */}
+            <Card
+              sx={{
+                opacity: "50%",
+              }}
+            >
+              {displayElements[1]}
+            </Card>
           </Grid2>
           <Grid2 xs={1}>
             <ArrowForwardIos

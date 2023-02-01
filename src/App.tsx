@@ -32,7 +32,6 @@ function App() {
     if (cookies.token) {
       setIsLoading(true);
       api.DoLoginToken(cookies.token).then((val: Response) => {
-        console.log(val);
         if (val.message === "Successful") {
           dispatch(setUser(val.user));
           setIsLoading(false);

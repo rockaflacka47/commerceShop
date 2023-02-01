@@ -1,5 +1,4 @@
 import {
-  autocompleteClasses,
   Button,
   Card,
   CardContent,
@@ -16,19 +15,17 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { Link, useParams, useLocation } from "react-router-dom";
 import { api } from "../../Api/api";
 import { useAppSelector, useAppDispatch } from "../../hooks";
-import { selectUser, addToCart, removeFromCart, addToRecentlyViewed } from "../../Slices/UserSlice";
+import { selectUser, addToRecentlyViewed } from "../../Slices/UserSlice";
 import { Item as displayItem } from "../../Types/Item";
 import currencyFormat from "../../Common/CurrencyFormat";
 import LoadingSpinner from "../loadingSpinner/loadingSpinner";
 import "./Item.css";
-import { Review } from "../../Types/Review";
-import StarsIcon from "@mui/icons-material/Stars";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { ArrowBack } from "@mui/icons-material";
-import { userItem } from "../../Types/UserItem";
 
 import setNotification from "../../Common/SendNotification";
 import { RecentlyViewed } from "../../Types/RecentlyViewed";
+import Rating from "../../Common/Rating";
+import { pushToCart, removeFromCart } from "../../Common/CartManagement";
 
 const defualtItem: displayItem = {
   _id: "",
@@ -65,10 +62,9 @@ export function Item() {
         let viewedObj: RecentlyViewed = {
           id: val.item._id,
           img_url: val.item.Img_url,
-          name: val.item.Name
-        }
-        dispatch(addToRecentlyViewed(viewedObj))
-        
+          name: val.item.Name,
+        };
+        dispatch(addToRecentlyViewed(viewedObj));
       } else {
         setIsLoading(false);
         setNotification("Error loading item, please try again", "error");
@@ -76,17 +72,23 @@ export function Item() {
     });
   }, []);
 
-  const calculateRating = ()=> {
+  const calculateRating = () => {
     let total = 0;
     item.Reviews.map((review) => {
       total += review.Rating;
     });
-    setOverallRating(Math.round((total / item.Reviews.length) * 10) / 10);
-  }
+    if (total > 0 && item.Reviews.length > 0) {
+      setOverallRating(Math.round((total / item.Reviews.length) * 10) / 10);
+    } else if (total == 0 && item.Reviews.length > 0) {
+      setOverallRating(0);
+    } else {
+      setOverallRating(-1);
+    }
+  };
   useEffect(() => {
     if (user.Name.length > 0) {
       setQuantity(searchCart());
-    } 
+    }
     calculateRating();
   }, [item]);
 
@@ -101,95 +103,40 @@ export function Item() {
     return i ? i.count : 0;
   };
 
-  const pushToCart = () => {
-    if (user.Name.length < 1) {
-      setNotification("Please login to add to cart", "error");
-      return;
-    }
-    if (!quantToAdd) {
-      setNotification("Please enter a quantity", "error");
-      return;
-    }
-    if (parseInt(quantToAdd) < 1) {
-      setNotification("Please enter a quantity greater than 0", "error");
-      return;
-    }
+  const pushToCartContainer = async () => {
+    setInProgress(true);
     let index: number = user.Cart.findIndex((e) => {
       return e.id === item._id;
     });
-    let count;
+    let count: number = -1;
     if (index >= 0) {
-      count = user.Cart[index];
+      count = user.Cart[index].count;
     }
-    let obj: userItem;
-    if (count) {
-      obj = {
-        id: count.id,
-        count: count.count,
-      };
-    } else {
-      obj = {
-        id: item._id,
-        count: 0,
-      };
+
+    if (count === -1) {
+      count = 0;
     }
-    setInProgress(true);
-    api
-      .PushToCart(user.Email, item._id, obj.count, parseInt(quantToAdd))
-      .then((val) => {
-        if (val.message === "Successfully added to cart") {
-          obj.count = obj.count + parseInt(quantToAdd);
-          dispatch(addToCart(obj));
-          setQuantity(quantity + parseInt(quantToAdd));
-          setInProgress(false);
-          setNotification(val.message, "success");
-        } else {
-          setInProgress(false);
-          setNotification(val.message, "error");
-        }
-      });
+    let status = await pushToCart(user, item, quantToAdd, count, dispatch);
+    if (status === "success") {
+      setQuantity(quantity + parseInt(quantToAdd));
+    }
+    setInProgress(false);
   };
 
-  const removeCart = () => {
+  const removeCartContainer = async () => {
     let index: number = user.Cart.findIndex((e) => {
       return e.id === item._id;
     });
     let count;
-    if (index < 0) {
-      setNotification("This item is not in your cart.", "error");
-      return;
-    }
-    if (!quantToAdd) {
-      setNotification("Please enter a quantity", "error");
-      return;
-    }
-    count = user.Cart[index];
-    if (count.count < parseInt(quantToAdd)) {
-      setNotification(
-        "Cannot remove more then what is currently in the cart.",
-        "error"
-      );
-      return;
-    }
-    let obj: userItem = {
-      id: count.id,
-      count: count.count,
-    };
+
+    count = user.Cart[index].count;
+
     setInProgress(true);
-    api
-      .RemoveFromCart(user.Email, item._id, obj.count, parseInt(quantToAdd))
-      .then((val) => {
-        if (val.message === "Successfully removed from cart") {
-          obj.count = obj.count - parseInt(quantToAdd);
-          dispatch(removeFromCart(obj));
-          setQuantity(quantity - parseInt(quantToAdd));
-          setInProgress(false);
-          setNotification(val.message, "success");
-        } else {
-          setInProgress(false);
-          setNotification(val.message, "error");
-        }
-      });
+    let status = await removeFromCart(user, item, quantToAdd, count, dispatch);
+    if (status === "success") {
+      setQuantity(quantity - parseInt(quantToAdd));
+    }
+    setInProgress(false);
   };
 
   const setQuantVal = (
@@ -200,41 +147,41 @@ export function Item() {
     }
   };
 
-  const submitReview = ()=>{
-    if(!user.Name.length){
+  const submitReview = () => {
+    if (!user.Name.length) {
       setNotification("Please login to leave a review", "error");
       return;
     }
-    if(isNaN(parseFloat(rating.toString())) || review === ""){
+    if (isNaN(parseFloat(rating.toString())) || review === "") {
       setNotification("Please fill out the review and give a rating", "error");
       return;
     }
 
-    api.AddReview(user.Name, review, parseFloat(rating.toString()), item._id).then((val)=>{
-      if(val.message === 'Successfully added review'){
-        let reviews = item.Reviews;
-    
-        reviews.push({
-          User_name: user.Name,
-          Review: review,
-          Rating: parseFloat(rating.toString())
-        })
-  
-        let tempitem = item;
-        tempitem.Reviews = reviews;
-  
-        setItem(tempitem);
-        calculateRating();
-        setReview("");
-        setRating(0);
-        setNotification(val.message, "success");
-      } else{
-        setNotification(val.message, "error");
-      }
-      
+    api
+      .AddReview(user.Name, review, parseFloat(rating.toString()), item._id)
+      .then((val) => {
+        if (val.message === "Successfully added review") {
+          let reviews = item.Reviews;
 
-    })
-  }
+          reviews.push({
+            User_name: user.Name,
+            Review: review,
+            Rating: parseFloat(rating.toString()),
+          });
+
+          let tempitem = item;
+          tempitem.Reviews = reviews;
+
+          setItem(tempitem);
+          calculateRating();
+          setReview("");
+          setRating(0);
+          setNotification(val.message, "success");
+        } else {
+          setNotification(val.message, "error");
+        }
+      });
+  };
 
   const renderItem = (
     <Container>
@@ -252,7 +199,6 @@ export function Item() {
       <Paper
         elevation={8}
         sx={{
-          //   height: "75vh"
           mt: { xs: "2vh" },
         }}
       >
@@ -262,11 +208,6 @@ export function Item() {
               component="img"
               image={item.Img_url}
               alt={item.Name.toString()}
-              // sx={{
-              //     objectFit: "contain",
-              //     height: "20vh",
-              //     width: "45vw"
-              // }}
             />
             {item.Alternate_pictures && item.Alternate_pictures.length > 0 && (
               <div></div>
@@ -277,21 +218,17 @@ export function Item() {
               <Typography gutterBottom variant="h5" component="h2">
                 {item.Name}
               </Typography>
-              <Typography component="h2" className="rating">
-                {overallRating ? overallRating + "/5" : "No ratings yet"}
-                <StarsIcon
-                  fontSize="small"
-                  className="star"
-                  sx={{
-                    ...(overallRating && {
-                      display: "block",
-                    }),
-                    ...(!overallRating && {
-                      display: "none",
-                    }),
-                  }}
-                />
-              </Typography>
+
+              {overallRating && overallRating > -1 && (
+                <Container>
+                  <Rating rating={overallRating} />
+                </Container>
+              )}
+              {overallRating && overallRating == -1 && (
+                <Typography component="h2" className="rating">
+                  No ratings yet
+                </Typography>
+              )}
             </CardContent>
             <CardContent>
               {
@@ -309,7 +246,7 @@ export function Item() {
                 <Grid xs={12} md={4}>
                   <Button
                     variant="outlined"
-                    onClick={removeCart}
+                    onClick={removeCartContainer}
                     color="warning"
                     className="min-width-100"
                     disabled={inProgress || !(quantity > 0)}
@@ -345,7 +282,7 @@ export function Item() {
                 <Grid xs={12} md={4}>
                   <Button
                     variant="outlined"
-                    onClick={pushToCart}
+                    onClick={pushToCartContainer}
                     disabled={inProgress}
                     color="warning"
                     className="min-width-100"
@@ -359,9 +296,6 @@ export function Item() {
               </Grid>
             </Grid>
           </Grid>
-          {/* <Grid xs={11} margin="auto">
-            <hr/>
-        </Grid> */}
         </Grid>
       </Paper>
       <Paper
@@ -383,7 +317,7 @@ export function Item() {
               multiline
               className="review-box"
               value={review}
-              onChange={(e)=>setReview(e.target.value)}
+              onChange={(e) => setReview(e.target.value)}
               minRows={4}
             />
           </Grid>
@@ -395,9 +329,9 @@ export function Item() {
                 type="number"
                 id="rating"
                 inputProps={{
-                  step: .1,
+                  step: 0.1,
                 }}
-                onChange={(e)=>setRating(parseFloat(e.target.value))}
+                onChange={(e) => setRating(parseFloat(e.target.value))}
                 sx={{
                   width: { xs: "100%", md: "56%" },
                 }}
@@ -443,7 +377,15 @@ export function Item() {
                           <Typography>Left By: {review.User_name} </Typography>
                         </Grid>
                         <Grid xs={6}>
-                          <Typography> Rating: {review.Rating}</Typography>
+                          <Typography
+                            sx={{
+                              display: "inline-flex",
+                            }}
+                          >
+                            {" "}
+                            Rating:{" "}
+                            {review.Rating && <Rating rating={review.Rating} />}
+                          </Typography>
                         </Grid>
                       </Grid>
                       <Grid xs={12}>

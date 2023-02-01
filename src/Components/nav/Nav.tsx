@@ -193,7 +193,7 @@ export default function Nav() {
 
   useEffect(() => {
     // handleMenuClose;
-    if (user.Name.length > 0) {
+    if (user.Name && user.Name.length > 0) {
       setShowLogin(false);
     } else {
       handleMenuClose;
@@ -223,7 +223,7 @@ export default function Nav() {
               Rocker Webshop
             </Typography>
           </Link>
-          <Search sx={{ width: "100%" }}>
+          {/* <Search sx={{ width: "100%" }}>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -232,9 +232,9 @@ export default function Nav() {
               inputProps={{ "aria-label": "search" }}
               sx={{ width: "100%" }}
             />
-          </Search>
+          </Search> */}
           <Box sx={{ flexGrow: 1 }} />
-          {user.Name.length > 0 && (
+          {user.Name && user.Name.length > 0 && (
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
               <Link to="/cart" color="white">
                 <IconButton
@@ -265,7 +265,7 @@ export default function Nav() {
               </IconButton>
             </Box>
           )}
-          {user.Name.length > 0 && (
+          {user.Name && user.Name.length > 0 && (
             <Box sx={{ display: { xs: "flex", md: "none" } }}>
               <Link to="/cart" color="white">
                 <IconButton

@@ -13,8 +13,6 @@ const CheckoutForm = () => {
     const elements = useElements();
   
     const handleSubmit = async (event: React.SyntheticEvent) => {
-      // We don't want to let default form submission happen here,
-      // which would refresh the page.
       event.preventDefault();
   
       if (!stripe || !elements) {
@@ -24,9 +22,19 @@ const CheckoutForm = () => {
       }
   
       const {error} = await stripe.confirmPayment({
-        //`Elements` instance that was used to create the Payment Element
         elements,
+        
         confirmParams: {
+          receipt_email: user.Email.toString(),
+          shipping: {
+            address: {
+              city: "Amsterdam",
+              country: "NL",
+              line1: "Groen van Prinstererstraat 6/3",
+              postal_code: "1051EE"
+            },
+            name: "David Rocker"
+          },
           return_url: 'http://localhost:5173/' + user._id + '/checkoutstatus',
         },
       });
@@ -40,6 +48,8 @@ const CheckoutForm = () => {
   return (
     <form onSubmit={handleSubmit} className="checkout-form">
       <PaymentElement />
+      {//TODO add address info
+      }
       <Button disabled={!stripe} color="warning" type="submit" variant="contained" sx={{
           marginTop: "5%",
           width: "100%"
