@@ -7,7 +7,8 @@ The front end can be found here and can be run with:
 'npm run dev'
 
 # Pre Reqs
-1. [Nodejs Installed] (https://nodejs.org/en/download/package-manager/)
-2. [Follow the steps to set up the back end] (www.google.com)
+
+1. [Nodejs Installed](https://nodejs.org/en/download/package-manager/)
+2. [Follow the steps to set up the back end](https://github.com/rockaflacka47/webshopBackend)
 
 If you would like access to an admin account for the Add Item page please get in contact with me. 
