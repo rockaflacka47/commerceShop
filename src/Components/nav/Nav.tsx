@@ -312,7 +312,10 @@ export default function Nav() {
               </Typography>
               {showLogin && (
                 <Container>
-                  <div className="background-exit" onClick={()=>setShowLogin(false)}></div>
+                  <div
+                    className="background-exit"
+                    onClick={() => setShowLogin(false)}
+                  ></div>
                   <Container
                     sx={[
                       { display: { xs: "flex", sm: "block" } },
@@ -322,7 +325,7 @@ export default function Nav() {
                         top: "6vh",
                         right: 5,
                         background: "white",
-                        zIndex: 120
+                        zIndex: 120,
                       },
                     ]}
                   >

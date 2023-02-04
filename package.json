@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "dev": "npx prettier --write . && vite",
+    "build": "npx prettier --write . && tsc && vite build",
+    "preview": "npx prettier --write . && vite preview"
   },
   "dependencies": {
     "@emotion/react": "^11.10.4",
@@ -34,6 +34,7 @@
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@vitejs/plugin-react": "^2.1.0",
+    "prettier": "^2.8.3",
     "typescript": "^4.6.4",
     "vite": "^3.1.0"
   }

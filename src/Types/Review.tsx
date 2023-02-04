@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
 export interface Review {
-    Review: string,
-    Rating: number,
-    User_name: String
+  Review: string;
+  Rating: number;
+  User_name: String;
 }

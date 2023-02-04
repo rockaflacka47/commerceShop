@@ -3,11 +3,10 @@ import { RootState } from "../Store/store";
 import { Notification } from "../Types/Notification";
 
 const initialState: Notification = {
-    text: "",
-    severity: "error",
-    visible: false
-}
-
+  text: "",
+  severity: "error",
+  visible: false,
+};
 
 export const notificationSlice = createSlice({
   name: "notification",

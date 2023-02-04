@@ -44,7 +44,7 @@ export default function Status() {
           switch (paymentIntent.status) {
             case "succeeded":
               //@ts-ignore
-             setAddress(paymentIntent.shipping);
+              setAddress(paymentIntent.shipping);
             case "processing":
               setPaymentStatus(paymentIntent.status);
               break;
@@ -79,10 +79,10 @@ export default function Status() {
 
   const renderStatus = (
     <Container>
-      {paymentStatus === "succeeded" && <SuccessStatus address={address}/>}
+      {paymentStatus === "succeeded" && <SuccessStatus address={address} />}
       {paymentStatus === "processing" && <ProcessingStatus />}
       {paymentStatus === "requires_payment_method" && (
-        <DisplayStatus status={paymentStatus}/>
+        <DisplayStatus status={paymentStatus} />
       )}
     </Container>
   );

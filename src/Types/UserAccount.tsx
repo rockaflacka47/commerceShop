@@ -1,4 +1,4 @@
 export enum UserAccount {
-    Admin = "ADMIN",
-    Customer = "CUSTOMER"
+  Admin = "ADMIN",
+  Customer = "CUSTOMER",
 }

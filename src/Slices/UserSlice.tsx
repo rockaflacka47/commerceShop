@@ -13,7 +13,7 @@ const initialState: User = {
   Password: "",
   Cart: [],
   RecentlyViewed: [],
-  Type: UserAccount.Customer
+  Type: UserAccount.Customer,
 };
 export const userSlice = createSlice({
   name: "user",
@@ -61,20 +61,20 @@ export const userSlice = createSlice({
       let index: number = state.RecentlyViewed.findIndex((e) => {
         return e.id === item.payload.id;
       });
-      if (index > -1){
+      if (index > -1) {
         return;
       }
-      let tempArray: RecentlyViewed[] = [item.payload, ...state.RecentlyViewed]
-      if(state.RecentlyViewed.length >= 5){
+      let tempArray: RecentlyViewed[] = [item.payload, ...state.RecentlyViewed];
+      if (state.RecentlyViewed.length >= 5) {
         tempArray.splice(5);
-       
       }
       state.RecentlyViewed = tempArray;
     },
   },
 });
 
-export const { setUser, addToCart, removeFromCart, addToRecentlyViewed } = userSlice.actions;
+export const { setUser, addToCart, removeFromCart, addToRecentlyViewed } =
+  userSlice.actions;
 
 export const selectUser = (state: RootState) => state.user;
 

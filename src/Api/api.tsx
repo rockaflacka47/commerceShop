@@ -12,13 +12,13 @@ export const api = {
   GetItems: function (page: Number): Promise<void | Item[]> {
     let ret: Item[];
     return fetch(
-      "https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/GetPaginatedItems",
+      "https://j1see5z2hb.execute-api.eu-west-3.amazonaws.com/test/GetPaginatedItems",
       {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-           Page: page
-          }),
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          Page: page,
+        }),
       }
     )
       .then((res) => res.json())
@@ -32,14 +32,14 @@ export const api = {
         }
       );
   },
-  //Description: Returns count of items 
+  //Description: Returns count of items
   //Request Type: GET
   GetCountItems: function (): Promise<void | number> {
     let ret: number;
     return fetch(
-      "https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/GetCountItems",
+      "https://j1see5z2hb.execute-api.eu-west-3.amazonaws.com/test/GetCountItems",
       {
-          headers: { "Content-Type": "application/json" },
+        method: "POST",
       }
     )
       .then((res) => res.json())
@@ -53,7 +53,7 @@ export const api = {
         }
       );
   },
-  
+
   //Description: Create a new account, returns the created user
   //Request Type: POST
   //Parameters:
@@ -67,7 +67,7 @@ export const api = {
   ): Promise<Response> {
     let ret: Response;
     return fetch(
-      "https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/createuser",
+      "https://j1see5z2hb.execute-api.eu-west-3.amazonaws.com/test/createuser",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -103,7 +103,7 @@ export const api = {
   ): Promise<Response> {
     let ret: Response;
     return fetch(
-      "https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/DoLogin",
+      "https://j1see5z2hb.execute-api.eu-west-3.amazonaws.com/test/DoLogin",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -129,7 +129,7 @@ export const api = {
   DoLoginToken: function (token: string): Promise<Response> {
     let ret: Response;
     return fetch(
-      "https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/DoLogin",
+      "https://j1see5z2hb.execute-api.eu-west-3.amazonaws.com/test/DoLogin",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -155,7 +155,7 @@ export const api = {
   DoLoginEmail: function (email: string): Promise<Response> {
     let ret: Response;
     return fetch(
-      "https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/DoLogin",
+      "https://j1see5z2hb.execute-api.eu-west-3.amazonaws.com/test/DoLogin",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -189,7 +189,7 @@ export const api = {
   ): Promise<Response> {
     let ret: Response;
     return fetch(
-      "https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/PushToCart",
+      "https://j1see5z2hb.execute-api.eu-west-3.amazonaws.com/test/PushToCart",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -227,7 +227,7 @@ export const api = {
   ): Promise<Response> {
     let ret: Response;
     return fetch(
-      "https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/RemoveFromCart",
+      "https://j1see5z2hb.execute-api.eu-west-3.amazonaws.com/test/RemoveFromCart",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -257,7 +257,7 @@ export const api = {
   GetItem: function (id: String | undefined): Promise<Response> {
     let ret: Response;
     return fetch(
-      "https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/GetItem",
+      "https://j1see5z2hb.execute-api.eu-west-3.amazonaws.com/test/GetItem",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -283,7 +283,7 @@ export const api = {
   GetItemsById: function (cart: userItem[]): Promise<Response> {
     let ret: Response;
     return fetch(
-      "https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/GetItemsById",
+      "https://j1see5z2hb.execute-api.eu-west-3.amazonaws.com/test/GetItemsById",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -310,7 +310,7 @@ export const api = {
   GetStripeSecret: function (total: number, email: String): Promise<Response> {
     let ret: Response;
     return fetch(
-      "https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/CreatePaymentIntent",
+      "https://j1see5z2hb.execute-api.eu-west-3.amazonaws.com/test/CreatePaymentIntent",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -337,7 +337,7 @@ export const api = {
     let ret: Response;
     console.log(file);
     return fetch(
-      "https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/UploadImageWebshop",
+      "https://j1see5z2hb.execute-api.eu-west-3.amazonaws.com/test/UploadImage",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -400,7 +400,7 @@ export const api = {
     let ret: Response;
     console.log(price);
     return fetch(
-      "https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/AddItem",
+      "https://j1see5z2hb.execute-api.eu-west-3.amazonaws.com/test/AddItem",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -442,7 +442,7 @@ export const api = {
   ): Promise<Response> {
     let ret: Response;
     return fetch(
-      "https://na8zsbizz1.execute-api.eu-west-3.amazonaws.com/test/AddReview",
+      "https://j1see5z2hb.execute-api.eu-west-3.amazonaws.com/test/AddReview",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

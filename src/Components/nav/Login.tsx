@@ -30,14 +30,13 @@ export default function Login() {
   let remember = true;
 
   const handleChange = () => {
-
-    setIsChecked(!isChecked)
+    setIsChecked(!isChecked);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(isChecked);
     remember = isChecked;
-  }, [isChecked])
+  }, [isChecked]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

@@ -69,11 +69,11 @@ export default function Display() {
     });
   };
 
-  useEffect(()=> {
-    if(pages.length > 0 && items.length > 0){
+  useEffect(() => {
+    if (pages.length > 0 && items.length > 0) {
       setIsLoading(false);
     }
-  }, [pages, items])
+  }, [pages, items]);
 
   useEffect(() => {
     setIsLoading(true);

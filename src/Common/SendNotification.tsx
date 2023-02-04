@@ -4,10 +4,7 @@ import { useAppDispatch } from "../hooks";
 import { setNotification as sendNotification } from "../Slices/NotificationSlice";
 import { AlertColor } from "@mui/material";
 
-export default function setNotification(
-  message: string,
-  severity: AlertColor
-) {
+export default function setNotification(message: string, severity: AlertColor) {
   store.dispatch(
     sendNotification({
       text: message,

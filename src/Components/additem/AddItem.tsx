@@ -25,7 +25,11 @@ export default function AddItem() {
     event.preventDefault();
 
     //check if all fields are filled out
-    if (name === "" || isNaN(parseFloat(price.toString())) || description === "") {
+    if (
+      name === "" ||
+      isNaN(parseFloat(price.toString())) ||
+      description === ""
+    ) {
       setErr(true);
       setNotification("Please fill out all fields", "error");
       return;
@@ -37,17 +41,19 @@ export default function AddItem() {
     }
     setErr(false);
 
-    api.AddItem(name, parseFloat(price.toString()), description, imgUrl).then((val) => {
-      if (val.message == "Successfully added item!") {
-        setName("");
-        setPrice(0);
-        setDescription("");
-        setImgUrl("");
-        setNotification(val.message, "success");
-      } else{
-        setNotification(val.message, "error");
-      }
-    });
+    api
+      .AddItem(name, parseFloat(price.toString()), description, imgUrl)
+      .then((val) => {
+        if (val.message == "Successfully added item!") {
+          setName("");
+          setPrice(0);
+          setDescription("");
+          setImgUrl("");
+          setNotification(val.message, "success");
+        } else {
+          setNotification(val.message, "error");
+        }
+      });
   };
 
   const handleChange = async function (
@@ -86,130 +92,134 @@ export default function AddItem() {
 
   //@ts-ignore
   const setP = (e) => {
-      setPrice(parseFloat(e.target.value))
-  }
+    setPrice(parseFloat(e.target.value));
+  };
 
   const renderForm = (
-      <Container
-        component="main"
+    <Container
+      component="main"
+      sx={{
+        marginLeft: { md: "-3%" },
+      }}
+    >
+      <CssBaseline />
+      <Box
         sx={{
-          marginLeft: { md: "-3%" },
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "90vw",
         }}
       >
-        <CssBaseline />
+        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <AddIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Add New Item
+        </Typography>
         <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            width: "90vw",
-          }}
+          component="form"
+          onSubmit={handleSubmit}
+          noValidate
+          sx={{ mt: 1, width: "90%" }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <AddIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Add New Item
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1, width: "90%" }}
-          >
-            <Grid container spacing={1} justifyContent="space-between">
-              <Grid item xs={6}>
-                <TextField
-                  margin="normal"
-                  required
-                  id="name"
-                  label="Name"
-                  name="name"
-                  value={name}
-                  autoFocus
-                  onChange={(e) => setName(e.target.value)}
-                  error={err && name === ""}
-                  sx={{
-                    width: "90%",
-                  }}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  margin="normal"
-                  required
-                  name="price"
-                  label="Price"
-                  type="number"
-                  id="price"
-                  inputProps={{
-                    step: .01,
-                  }}
-                  onChange={(e) => {setP(e)}}
-                  error={err && (price === 0 || isNaN(parseFloat(price.toString())))}
-                  sx={{
-                    width: "90%",
-                  }}
-                />
-              </Grid>
+          <Grid container spacing={1} justifyContent="space-between">
+            <Grid item xs={6}>
+              <TextField
+                margin="normal"
+                required
+                id="name"
+                label="Name"
+                name="name"
+                value={name}
+                autoFocus
+                onChange={(e) => setName(e.target.value)}
+                error={err && name === ""}
+                sx={{
+                  width: "90%",
+                }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                margin="normal"
+                required
+                name="price"
+                label="Price"
+                type="number"
+                id="price"
+                inputProps={{
+                  step: 0.01,
+                }}
+                onChange={(e) => {
+                  setP(e);
+                }}
+                error={
+                  err && (price === 0 || isNaN(parseFloat(price.toString())))
+                }
+                sx={{
+                  width: "90%",
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                margin="normal"
+                required
+                id="description"
+                label="Description"
+                name="description"
+                value={description}
+                multiline
+                onChange={(e) => setDescription(e.target.value)}
+                error={err && description === ""}
+                rows="4"
+                sx={{
+                  width: "95%",
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button variant="contained" component="label">
+                Upload File
+                <input type="file" hidden onChange={handleChange} />
+              </Button>
+            </Grid>
+            {imgUrl && (
               <Grid item xs={12}>
                 <TextField
                   margin="normal"
                   required
-                  id="description"
-                  label="Description"
-                  name="description"
-                  value={description}
-                  multiline
-                  onChange={(e) => setDescription(e.target.value)}
-                  error={err && description === ""}
-                  rows="4"
+                  name="url"
+                  label="Image Url"
+                  id="url"
+                  value={imgUrl}
                   sx={{
                     width: "95%",
                   }}
+                  disabled
                 />
               </Grid>
-              <Grid item xs={12}>
-                <Button variant="contained" component="label">
-                  Upload File
-                  <input type="file" hidden onChange={handleChange} />
-                </Button>
-              </Grid>
-              {imgUrl && (
-                <Grid item xs={12}>
-                  <TextField
-                    margin="normal"
-                    required
-                    name="url"
-                    label="Image Url"
-                    id="url"
-                    value={imgUrl}
-                    sx={{
-                      width: "95%",
-                    }}
-                    disabled
-                  />
-                </Grid>
-              )}
-            </Grid>
+            )}
+          </Grid>
 
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={!imgUrl}
-              sx={{
-                mt: 3,
-                mb: 2,
-                bgcolor: "secondary.dark",
-                width: "95%",
-              }}
-            >
-              Add Item
-            </Button>
-          </Box>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={!imgUrl}
+            sx={{
+              mt: 3,
+              mb: 2,
+              bgcolor: "secondary.dark",
+              width: "95%",
+            }}
+          >
+            Add Item
+          </Button>
         </Box>
-      </Container>
+      </Box>
+    </Container>
   );
   return renderForm;
 }

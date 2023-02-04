@@ -10,7 +10,7 @@ import { api } from "./Api/api";
 import { Response } from "./Types/Response";
 import {
   selectNotification,
-  setNotification as sendNotification
+  setNotification as sendNotification,
 } from "./Slices/NotificationSlice";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Alert } from "@mui/material";
@@ -35,7 +35,7 @@ function App() {
         if (val.message === "Successful") {
           dispatch(setUser(val.user));
           setIsLoading(false);
-        } else if(val.message){
+        } else if (val.message) {
           //dispatch error with message
           setNotification(val.message, "error");
           removeCookie("token", { path: "/" });
