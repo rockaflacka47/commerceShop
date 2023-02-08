@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../Store/store";
-import { Item } from "../Types/Item";
 import { RecentlyViewed } from "../Types/RecentlyViewed";
 import { User } from "../Types/User";
 import { UserAccount } from "../Types/UserAccount";
@@ -70,11 +69,19 @@ export const userSlice = createSlice({
       }
       state.RecentlyViewed = tempArray;
     },
+    clearCart: (state) => {
+      state.Cart = [];
+    },
   },
 });
 
-export const { setUser, addToCart, removeFromCart, addToRecentlyViewed } =
-  userSlice.actions;
+export const {
+  setUser,
+  addToCart,
+  removeFromCart,
+  addToRecentlyViewed,
+  clearCart,
+} = userSlice.actions;
 
 export const selectUser = (state: RootState) => state.user;
 

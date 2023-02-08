@@ -34,7 +34,6 @@ export default function Login() {
   };
 
   useEffect(() => {
-    console.log(isChecked);
     remember = isChecked;
   }, [isChecked]);
 
@@ -56,9 +55,7 @@ export default function Login() {
           data.get("password")?.toString()
         )
         .then((val: Response) => {
-          console.log(val);
           if (val.message === "Successful") {
-            console.log("dispatching");
             if (remember) {
               setCookie("token", val.token, { path: "/" });
             }
@@ -77,9 +74,7 @@ export default function Login() {
           data.get("name")?.toString()
         )
         .then((val: Response) => {
-          console.log(val);
           if (val.message === "Successful") {
-            console.log("dispatching");
             if (remember) {
               setCookie("token", val.token, { path: "/" });
             }

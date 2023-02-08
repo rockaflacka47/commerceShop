@@ -22,7 +22,6 @@ export async function pushToCart(
     return "";
   }
   let q = quantToAdd;
-
   if (q) {
     let quant = parseInt(q);
     if (!quant) {
@@ -35,13 +34,11 @@ export async function pushToCart(
     }
 
     let obj: userItem;
-
-    if (count) {
+    if (count != null) {
       obj = {
         id: item._id,
         count: count,
       };
-
       api.PushToCart(user.Email, item._id, obj.count, quant).then((val) => {
         if (val.message === "Successfully added to cart") {
           //since the update was successful we can now update the front end

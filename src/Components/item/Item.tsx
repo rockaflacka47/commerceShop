@@ -112,7 +112,6 @@ export function Item() {
     if (index >= 0) {
       count = user.Cart[index].count;
     }
-
     if (count === -1) {
       count = 0;
     }

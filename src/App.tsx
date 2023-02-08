@@ -46,7 +46,6 @@ function App() {
   }, []);
 
   const closeAlert = () => {
-    console.log("closing");
     dispatch(sendNotification({ text: "", severity: "error", visible: false }));
   };
 

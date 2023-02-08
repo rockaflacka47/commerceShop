@@ -1,15 +1,14 @@
 import {
+  Button,
   Card,
   CardContent,
-  Paper,
   Stack,
-  textFieldClasses,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Props } from "../../Types/Props";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
-import { useAppSelector } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import { selectUser } from "../../Slices/UserSlice";
 import { Item } from "../../Types/Item";
 import { api } from "../../Api/api";
@@ -17,16 +16,18 @@ import setNotification from "../../Common/SendNotification";
 import { userItem } from "../../Types/UserItem";
 import LoadingSpinner from "../loadingSpinner/loadingSpinner";
 import currencyFormat from "../../Common/CurrencyFormat";
+import { clearCart } from "../../Slices/UserSlice";
 import "./SuccessStatus.css";
+import { Link } from "react-router-dom";
 
 export default function SuccessStatus(props: Props) {
   const user = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
   const [order, setOrder] = useState<Item[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [counts, setCounts] = useState<Map<string, number>>(new Map());
   const [totalCost, setTotalCost] = useState<Number>(0);
   let countMap = new Map();
-  console.log(props);
 
   if (user === null) {
   }
@@ -44,7 +45,11 @@ export default function SuccessStatus(props: Props) {
 
   useEffect(() => {
     setIsLoading(false);
+    api.ClearCart(user.Email.toString()).then((val) => {
+      dispatch(clearCart());
+    });
   }, [totalCost]);
+
   useEffect(() => {
     if (user.Cart.length) {
       initializePage();
@@ -81,8 +86,8 @@ export default function SuccessStatus(props: Props) {
   }, [counts]);
 
   const renderStatus = (
-    <Paper className="fullscreen">
-      <Grid container spacing={2}>
+    <Card className="fullscreen" variant="outlined">
+      <Grid container spacing={2} className="center">
         <Grid
           xs={12}
           sx={{
@@ -161,8 +166,36 @@ export default function SuccessStatus(props: Props) {
             received your items by then contact our support team.
           </Typography>
         </Grid>
+        <Grid
+          xs={12}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: { xs: "center" },
+            margin: "auto",
+          }}
+        >
+          <Link
+            to={{
+              pathname: "/",
+            }}
+            color="warning"
+          >
+            <Button
+              variant="contained"
+              color="warning"
+              sx={{
+                width: "100%",
+                my: "auto",
+                height: "80%",
+              }}
+            >
+              Continue Shopping
+            </Button>
+          </Link>
+        </Grid>
       </Grid>
-    </Paper>
+    </Card>
   );
 
   return <div>{isLoading ? <LoadingSpinner /> : renderStatus}</div>;

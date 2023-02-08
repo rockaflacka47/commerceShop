@@ -14,7 +14,7 @@
     "@mui/icons-material": "^5.10.3",
     "@mui/material": "^5.10.4",
     "@reduxjs/toolkit": "^1.8.5",
-    "@stripe/react-stripe-js": "^1.10.0",
+    "@stripe/react-stripe-js": "^1.16.4",
     "@stripe/stripe-js": "^1.36.0",
     "framer-motion": "^7.5.2",
     "google-map-react": "^2.2.0",

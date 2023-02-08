@@ -349,7 +349,6 @@ export const api = {
       .then((res) => res.json())
       .then(
         (result) => {
-          console.log(result);
           ret = result;
           return ret;
         },
@@ -366,15 +365,12 @@ export const api = {
   //file: File, file to be uploaded
   UploadToS3: function (url: string, file: File | null): Promise<S3Response> {
     let ret;
-    console.log(url);
-    console.log(file);
     return fetch(url, {
       method: "PUT",
       headers: { "Content-Type": "multipart/form-data" },
       body: file,
     }).then(
       (result) => {
-        console.log(result.url);
         ret = result;
         return ret;
       },
@@ -398,7 +394,6 @@ export const api = {
     img_url: string
   ): Promise<Response> {
     let ret: Response;
-    console.log(price);
     return fetch(
       "https://j1see5z2hb.execute-api.eu-west-3.amazonaws.com/test/AddItem",
       {
@@ -417,7 +412,6 @@ export const api = {
       .then((res) => res.json())
       .then(
         (result) => {
-          console.log(result);
           ret = result;
           return ret;
         },
@@ -457,7 +451,34 @@ export const api = {
       .then((res) => res.json())
       .then(
         (result) => {
-          console.log(result);
+          ret = result;
+          return ret;
+        },
+        (error) => {
+          console.log(error);
+          return error.message;
+        }
+      );
+  },
+  //Description: Clear the cart of the user
+  //Request Type: POST
+  //Parameters:
+  //Email: user Email
+  ClearCart: function (Email: string): Promise<Response> {
+    let ret: Response;
+    return fetch(
+      "https://j1see5z2hb.execute-api.eu-west-3.amazonaws.com/test/ClearCart",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          Email: Email,
+        }),
+      }
+    )
+      .then((res) => res.json())
+      .then(
+        (result) => {
           ret = result;
           return ret;
         },

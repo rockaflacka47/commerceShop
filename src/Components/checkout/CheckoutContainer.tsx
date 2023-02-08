@@ -4,8 +4,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
 import CheckoutForm from "./Checkout";
-import { api } from "../../Api/api";
-import { Container, Paper } from "@mui/material";
+import {  Paper } from "@mui/material";
 import { Props } from "../../Types/Props";
 import Status from "../status/Status";
 
@@ -14,7 +13,6 @@ const stripePromise = loadStripe(
 );
 
 export default function CheckoutContainer(props: Props) {
-  console.log(props);
   const options = {
     clientSecret: props.secret
       ? props.secret
@@ -38,9 +36,10 @@ export default function CheckoutContainer(props: Props) {
           sx={{
             position: "fixed",
             left: "25%",
-            top: "25%",
+            top: "12.5%",
             width: "50%",
-            height: "50%",
+            overflow: "scroll",
+            height: "75%",
             zIndex: "150",
             display: "flex",
           }}

@@ -21,6 +21,7 @@ import { Link } from "react-router-dom";
 import LoadingSpinner from "../loadingSpinner/loadingSpinner";
 import CarouselDisplay from "../carousel/Carousel";
 import { pushToCart } from "../../Common/CartManagement";
+import "./Display.css";
 import {
   FormControl,
   InputLabel,
@@ -56,7 +57,7 @@ export default function Display() {
       if (e) {
         //calculate the valid page numbers
         let numberOfItems = e;
-        let numberOfPages = numberOfItems / 8;
+        let numberOfPages = numberOfItems / 12;
         numberOfPages = parseInt(numberOfPages.toString());
 
         let i = 0;
@@ -141,7 +142,14 @@ export default function Display() {
             {/* End hero unit */}
             <Grid container spacing={4}>
               {items.map((i) => (
-                <Grid item key={i._id as Key} xs={6} sm={4} md={3}>
+                <Grid
+                  item
+                  key={i._id as Key}
+                  xs={7}
+                  sm={4}
+                  md={3}
+                  className="margin-auto"
+                >
                   <Card
                     sx={{
                       height: "100%",

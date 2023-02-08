@@ -5,3 +5,13 @@
   width: 100%;
   height: 92vh;
 }
+
+.center {
+  max-height: 70%;
+  margin-left: auto !important;
+  max-width: 80%;
+  margin-right: auto !important;
+  margin-top: 25% !important;
+  margin-bottom: 25% !important;
+  border: 2px solid #1c313a;
+}

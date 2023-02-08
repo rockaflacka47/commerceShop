@@ -74,7 +74,6 @@ export function Cart() {
   }, [items]);
 
   const doCheckout = () => {
-    console.log(totalCost);
     api.GetStripeSecret(totalCost, user.Email).then((val) => {
       setSecret(val.client_secret);
     });

@@ -11,23 +11,17 @@ import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import CartIcon from "@mui/icons-material/ShoppingCart";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { Container } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { selectUser, setUser } from "../../Slices/UserSlice";
 import Login from "./Login";
 import { User } from "../../Types/User";
-import { ThemeProvider, useTheme } from "@mui/material/styles";
 import { useCookies } from "react-cookie";
 import { Link } from "react-router-dom";
 import { UserAccount } from "../../Types/UserAccount";
-import zIndex from "@mui/material/styles/zIndex";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -94,8 +88,6 @@ export default function Nav() {
   };
 
   const handleMenuClose = () => {
-    //isMenuOpen = false;
-
     setAnchorEl(null);
     handleMobileMenuClose();
   };
@@ -204,21 +196,12 @@ export default function Nav() {
     <Box sx={{ flexGrow: 1, width: "100%" }}>
       <AppBar position="fixed">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
           <Link to="/">
             <Typography
               variant="h6"
               noWrap
               component="div"
-              sx={{ display: { xs: "none", sm: "block" }, color: "#ffffff" }}
+              sx={{ display: { sm: "block" }, color: "#ffffff" }}
             >
               Rocker Webshop
             </Typography>
@@ -304,7 +287,6 @@ export default function Nav() {
                   },
                 }}
                 onClick={() => {
-                  console.log(isLoginOpen);
                   setShowLogin(true);
                 }}
               >

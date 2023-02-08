@@ -1,5 +1,4 @@
 import {
-  useTheme,
   Container,
   CssBaseline,
   Box,

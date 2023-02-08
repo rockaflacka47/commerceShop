@@ -1,5 +1,5 @@
-import React from "react";
-import { PaymentElement } from "@stripe/react-stripe-js";
+import React, { useState } from "react";
+import { PaymentElement, AddressElement } from "@stripe/react-stripe-js";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 import setNotification from "../../Common/SendNotification";
 import "./Checkout.css";
@@ -11,6 +11,13 @@ const CheckoutForm = () => {
   const user = useAppSelector(selectUser);
   const stripe = useStripe();
   const elements = useElements();
+  const [line1, setLine1] = useState<string>("");
+  const [line2, setLine2] = useState<string>("");
+  const [city, setCity] = useState<string>("");
+  const [country, setCountry] = useState<string>("");
+  const [postalCode, setPostalCode] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [submitError, setSubmitError] = useState<boolean>(false);
 
   const handleSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
@@ -26,32 +33,24 @@ const CheckoutForm = () => {
 
       confirmParams: {
         receipt_email: user.Email.toString(),
-        shipping: {
-          address: {
-            city: "Amsterdam",
-            country: "NL",
-            line1: "Groen van Prinstererstraat 6/3",
-            postal_code: "1051EE",
-          },
-          name: "David Rocker",
-        },
         return_url: "http://localhost:5173/" + user._id + "/checkoutstatus",
       },
     });
+    if (error) {
+      setSubmitError(true);
+    }
 
     if (error) {
-      let message: string = error.message
-        ? error.message
-        : "Error processing payment, please try again";
+      console.log(error.message);
+      let message =
+        "There was an issue with your payment method. Please try again or use a different method.";
       setNotification(message, "error");
     }
   };
   return (
     <form onSubmit={handleSubmit} className="checkout-form">
       <PaymentElement />
-      {
-        //TODO add address info
-      }
+      <AddressElement options={{ mode: "shipping" }} />
       <Button
         disabled={!stripe}
         color="warning"

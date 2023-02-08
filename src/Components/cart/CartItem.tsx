@@ -10,16 +10,13 @@ import {
 } from "@mui/material";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { api } from "../../Api/api";
 import currencyFormat from "../../Common/CurrencyFormat";
 import Rating from "../../Common/Rating";
-import setNotification from "../../Common/SendNotification";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { selectUser } from "../../Slices/UserSlice";
 import { CartProps } from "../../Types/CartProps";
 import { Item } from "../../Types/Item";
 import { Review } from "../../Types/Review";
-import { userItem } from "../../Types/UserItem";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import LoadingSpinner from "../loadingSpinner/loadingSpinner";
