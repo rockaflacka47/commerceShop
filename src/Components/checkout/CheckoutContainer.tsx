@@ -4,7 +4,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
 import CheckoutForm from "./Checkout";
-import {  Paper } from "@mui/material";
+import { Paper } from "@mui/material";
 import { Props } from "../../Types/Props";
 import Status from "../status/Status";
 

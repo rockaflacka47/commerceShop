@@ -1,10 +1,4 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Button, Card, CardContent, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Props } from "../../Types/Props";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
